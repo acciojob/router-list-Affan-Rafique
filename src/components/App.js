@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from "react";
-import Home from "./Home";
-import About from "./About";
-import Navigation from "./Navigation";
+import React, { useState } from "react";
+import ItemList from "./ItemList";
+import ItemDetail from "./ItemDetail";
 
 function App() {
-  const [route, setRoute] = useState(window.location.pathname);
+  const [selectedId, setSelectedId] = useState(null);
 
-  useEffect(() => {
-    const handleLocationChange = () => {
-      setRoute(window.location.pathname);
-    };
-    window.addEventListener("popstate", handleLocationChange);
-    return () => window.removeEventListener("popstate", handleLocationChange);
-  }, []);
-
-  const navigate = (path) => {
-    window.history.pushState({}, "", path);
-    setRoute(path);
+  const handleSelect = (id) => {
+    setSelectedId(id);
   };
 
   return (
-    <div className="app">
-      <Navigation onNavigate={navigate} />
-      {route === "/" && <Home />}
-      {route === "/about" && <About />}
+    <div>
+      {selectedId === null ? (
+        <ItemList onSelect={handleSelect} />
+      ) : (
+        <ItemDetail id={selectedId} onBack={() => setSelectedId(null)} />
+      )}
     </div>
   );
 }
 
-export default App;
+export default App;
+
